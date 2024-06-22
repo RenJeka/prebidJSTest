@@ -2,10 +2,17 @@
 // import { v4 as uuidv4} from 'uuid'
 
 const express = require('express');
+const cors = require('cors'); // Import CORS module for handling cross-origin requests
+const v4 = require('uuid'); // Import CORS module for handling cross-origin requests
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 
 app.post('/bid', (req, res) => {
 
@@ -13,15 +20,23 @@ app.post('/bid', (req, res) => {
 
     const {width, height} = req.body;
 
+    const bidRequest = {
+        placementId: 12345,
+        sizes: [[200, 150]]
+    }
+
     if (bidRequest.placementId && bidRequest.sizes) {
+        const width = bidRequest.sizes[0][0]
+        const height = bidRequest.sizes[0][1]
+
         // MOCK answer
         const bidResponse = {
-            requestId: uuidv4(),
+            requestId: '12345aaa',
             cpm: 1.50, // The bid price (cost per 1000 impressions).
             width: width,
             height: height,
             ad: `
-                <div style="width: ${bidRequest.width}px; height: ${bidRequest.height}px; background-color: antiquewhite; display: flex; align-items: center; justify-content: center;">
+                <div style="width: ${width}px; height: ${height}px; background-color: antiquewhite; display: flex; align-items: center; justify-content: center;">
                     <div>
                         <h4>AdvertiseX AD header</h4>
                         <p>AdvertiseX AD body</p>

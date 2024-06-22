@@ -12,8 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "4.19.2",
-    "http-server": "^14.1.1",
-    "prebid.js": "^9.1.0",
-    "uuid": "^10.0.0"
+    "http-server": "14.1.1",
+    "prebid.js": "8.52.0",
+    "uuid": "10.0.0",
+    "cors": "2.8.5"
   }
 }

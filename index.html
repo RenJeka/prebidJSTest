@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Prebid Test Page</title>
     <!-- Include Prebid.js library -->
-    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/dist/not-for-prod/prebid.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/src/adapters/bidderFactory.js"></script>
-    <script src="./advertiseXPrebidAdapter/advertiseXPrebidAdapter.js"></script>
+<!--    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/dist/not-for-prod/prebid.js"></script>-->
+<!--    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/src/adapters/bidderFactory.js"></script>-->
+<!--    <script src="./advertiseXPrebidAdapter/advertiseXPrebidAdapter.js"></script>-->
+    <script src="./node_modules/prebid.js/build/dist/prebid.js"></script>
 </head>
 <body>
 <!-- Header -->
@@ -17,7 +18,7 @@
     // Set timeout for bid requests
     const PREBID_TIMEOUT = 1000;
 
-    console.log('AdvertiseXAdapter:', AdvertiseXAdapter);
+    // console.log('AdvertiseXAdapter:', AdvertiseXAdapter);
 
 
     // Define ad units
