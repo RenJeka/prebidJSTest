@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Prebid Test Page</title>
     <!-- Include Prebid.js library -->
-    <script src="/node_modules/prebid.js/build/dist/prebid.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/dist/not-for-prod/prebid.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/src/adapters/bidderFactory.js"></script>
+    <script src="./advertiseXPrebidAdapter/advertiseXPrebidAdapter.js"></script>
 </head>
 <body>
 <!-- Header -->
@@ -15,6 +17,9 @@
     // Set timeout for bid requests
     const PREBID_TIMEOUT = 1000;
 
+    console.log('AdvertiseXAdapter:', AdvertiseXAdapter);
+
+
     // Define ad units
     const adUnits = [{
         code: 'ad-div',
@@ -24,12 +29,16 @@
             }
         },
         bids: [{
-            bidder: 'advertisex',
+            bidder: 'AdvertiseX',
             params: {
-                adUnitCode: '123456' // Example ad unit code
+                adUnitCode: '123456', // Example ad unit code,
+                placementId: '12345'
             }
         }]
     }];
+
+    console.log('pbjs:', pbjs);
+
 
     // Queue the request to Prebid.js
     pbjs.que.push(function() {
@@ -38,12 +47,15 @@
         // Request bids
         pbjs.requestBids({
             timeout: PREBID_TIMEOUT,
-            bidsBackHandler: initAdserver
+            bidsBackHandler: initAdServer
         });
     });
 
     // Function to handle bid responses
-    function initAdserver(bidResponses) {
+    function initAdServer(bidResponses) {
+
+        console.log('bidResponses:', bidResponses);
+
         // Iterate over each ad unit response
         Object.keys(bidResponses).forEach(adUnitCode => {
             const adUnitResponse = bidResponses[adUnitCode];

@@ -1,11 +1,10 @@
-import * as utils from 'prebid.js/src/utils';
-import {config} from 'prebid.js/src/config';
-import {registerBidder} from 'prebid.js/src/adapters/bidderFactory';
-import {BANNER} from 'prebid.js/src/mediaTypes.js';
-const BIDDER_CODE = 'AdvertiseX';
-export const spec = {
-        code: BIDDER_CODE,
-        supportedMediaTypes: [BANNER],
+const ENDPOINT_URL = 'http://localhost:3000/bid'
+
+import {registerBidder} from '/bidderFactory.js';
+
+const AdvertiseXAdapter = () => {return {
+        code: 'AdvertiseX',
+        // supportedMediaTypes: ['Banner'],
         /**
          * Determines whether or not the given bid request is valid.
          *
@@ -31,6 +30,9 @@ export const spec = {
                 test: 111
             };
             const payloadString = JSON.stringify(payload);
+
+            console.log('ENDPOINT_URL:', ENDPOINT_URL);
+
             return {
                 method: 'POST',
                 url: ENDPOINT_URL,
@@ -67,46 +69,13 @@ export const spec = {
             return bidResponses;
         },
 
-    /**
-     * Register the user sync pixels which should be dropped after the auction.
-     *
-     * @param {SyncOptions} syncOptions Which user syncs are allowed?
-     * @param {ServerResponse[]} serverResponses List of server's responses.
-     * @return {UserSync[]} The user syncs which should be dropped.
-     */
-    getUserSyncs: function(syncOptions, serverResponses, gdprConsent, uspConsent) {
-
-        console.log('getUserSyncs:', getUserSyncs);
-
-        const syncs = []
-
-        let gdpr_params;
-        if (typeof gdprConsent.gdprApplies === 'boolean') {
-            gdpr_params = `gdpr=${Number(gdprConsent.gdprApplies)}&gdpr_consent=${gdprConsent.consentString}`;
-        } else {
-            gdpr_params = `gdpr_consent=${gdprConsent.consentString}`;
-        }
-
-        if (syncOptions.iframeEnabled) {
-            syncs.push({
-                type: 'iframe',
-                url: '//acdn.adnxs.com/ib/static/usersync/v3/async_usersync.html?' + gdpr_params
-            });
-        }
-        if (syncOptions.pixelEnabled && serverResponses.length > 0) {
-            syncs.push({
-                type: 'image',
-                url: serverResponses[0].body.userSync.url + gdpr_params
-            });
-        }
-        return syncs;
-    },
 
     /**
      * Register bidder specific code, which will execute if bidder timed out after an auction
      * @param {data} Containing timeout specific data
      */
     onTimeout: function(data) {
+        console.warn('timeout: ', data)
         // onTimeout handler
     },
 
@@ -115,15 +84,7 @@ export const spec = {
      * @param {Bid} The bid that won the auction
      */
     onBidWon: function(bid) {
-        // onBidWon handler
-    },
-
-    /**
-     * Register bidder specific code, which will execute when the adserver targeting has been set for a bid from this bidder
-     * @param {Bid} The bid of which the targeting has been set
-     */
-    onSetTargeting: function(bid) {
-        // onSetTargeting handler
+        console.log(`bid won: `, bid)
     },
 
     /**
@@ -131,8 +92,19 @@ export const spec = {
      * @param {error, bidderRequest} An object with the XMLHttpRequest error and the bid request object
      */
     onBidderError: function({ error, bidderRequest }) {
-        // onBidderError handler
+        console.error(`Error: `, error)
     }
 }
+}
 
-registerBidder(spec);
+// registerBidder(spec);
+
+// pbjs.registerBidAdapter({
+//     bidder: 'AdvertiseX',
+//     adapter: AdvertiseXAdapter
+// }, 'AdvertiseX');
+
+console.log('pbjs:', pbjs);
+
+
+registerBidder(AdvertiseXAdapter);
