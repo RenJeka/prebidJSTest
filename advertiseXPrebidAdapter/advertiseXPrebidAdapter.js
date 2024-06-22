@@ -6,7 +6,7 @@ const ENDPOINT_URL = 'http://localhost:3000/bid'
 
 const AdvertiseXAdapter = {
     code: 'AdvertiseX',
-    // supportedMediaTypes: ['Banner'],
+    supportedMediaTypes: ['Banner'],
     /**
      * Determines whether or not the given bid request is valid.
      *
@@ -14,8 +14,6 @@ const AdvertiseXAdapter = {
      * @return boolean True if this is a valid bid, and false otherwise.
      */
     isBidRequestValid: function(bid) {
-
-        console.log('isBidRequestValid: ', bid)
         // return !!(bid.params);
         return true;
     },
@@ -27,32 +25,14 @@ const AdvertiseXAdapter = {
      */
     buildRequests: function(validBidRequests) {
 
-        console.log('AdvertiseXAdapter_validBidRequests: ', validBidRequests)
-
         const requests = validBidRequests.map(bid => {
-            const requestObject = {
+            return {
                 method: 'POST',
                 url: ENDPOINT_URL,
                 data: JSON.stringify({
                     adUnitCode: bid.params.adUnitCode,
                     sizes: bid.sizes,
                     bidId: bid.bidId,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-
-            console.log('requestObject ***************:', requestObject);
-
-
-            return {
-                method: 'POST', // Request method
-                url: ENDPOINT_URL, // Endpoint URL
-                data: JSON.stringify({ // Request data
-                    adUnitCode: bid.params.adUnitCode, // Ad unit code
-                    sizes: bid.sizes, // Ad sizes
-                    bidId: bid.bidId, // Bid ID
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -69,12 +49,6 @@ const AdvertiseXAdapter = {
      * @return {Bid[]} An array of bids which were nested inside the server.
      */
     interpretResponse: function(serverResponse, bidRequest) {
-        // const serverBody  = serverResponse.body;
-        // const headerValue = serverResponse.headers.get('some-response-header');
-
-        console.log('interpretResponse (serverResponse): ', serverResponse)
-        console.log('interpretResponse (bidRequest): ', bidRequest)
-
         const {
             cpm,
             requestId,
@@ -86,7 +60,6 @@ const AdvertiseXAdapter = {
             ttl,
             ad,
         } = serverResponse.body
-
 
         const bidResponses = [];
         const bidResponse = {
@@ -133,12 +106,5 @@ const AdvertiseXAdapter = {
         console.error(`Error: `, error)
     }
 }
-
-// registerBidder(spec);
-
-// pbjs.registerBidAdapter({
-//     bidder: 'AdvertiseX',
-//     adapter: AdvertiseXAdapter
-// }, 'AdvertiseX');
 
 registerBidder(AdvertiseXAdapter);
