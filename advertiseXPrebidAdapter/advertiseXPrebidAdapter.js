@@ -28,19 +28,39 @@ const AdvertiseXAdapter = {
     buildRequests: function(validBidRequests) {
 
         console.log('AdvertiseXAdapter_validBidRequests: ', validBidRequests)
-        console.log('AdvertiseXAdapter_bidderRequest.bids[]: ', bidderRequest.bids)
-        const payload = {
-            test: 111
-        };
-        const payloadString = JSON.stringify(payload);
 
-        console.log('ENDPOINT_URL:', ENDPOINT_URL);
+        const requests = validBidRequests.map(bid => {
+            const requestObject = {
+                method: 'POST',
+                url: ENDPOINT_URL,
+                data: JSON.stringify({
+                    adUnitCode: bid.params.adUnitCode,
+                    sizes: bid.sizes,
+                    bidId: bid.bidId,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
 
-        return {
-            method: 'POST',
-            url: ENDPOINT_URL,
-            data: payloadString,
-        };
+            console.log('requestObject ***************:', requestObject);
+
+
+            return {
+                method: 'POST', // Request method
+                url: ENDPOINT_URL, // Endpoint URL
+                data: JSON.stringify({ // Request data
+                    adUnitCode: bid.params.adUnitCode, // Ad unit code
+                    sizes: bid.sizes, // Ad sizes
+                    bidId: bid.bidId, // Bid ID
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+        });
+
+        return requests;
     },
     /**
      * Unpack the response from the server into a list of bids.
@@ -54,21 +74,36 @@ const AdvertiseXAdapter = {
 
         console.log('interpretResponse (serverResponse): ', serverResponse)
         console.log('interpretResponse (bidRequest): ', bidRequest)
+
+        const {
+            cpm,
+            requestId,
+            creativeId,
+            width,
+            height,
+            currency,
+            netRevenue,
+            ttl,
+            ad,
+        } = serverResponse.body
+
+
         const bidResponses = [];
         const bidResponse = {
-            requestId: bidRequest.bidId,
-            cpm: CPM,
-            width: WIDTH,
-            height: HEIGHT,
-            creativeId: CREATIVE_ID,
-            dealId: DEAL_ID,
-            currency: CURRENCY,
-            netRevenue: true,
-            ttl: TIME_TO_LIVE,
-            referrer: REFERER,
-            ad: CREATIVE_BODY
+            requestId: requestId,
+            creativeId: creativeId,
+            cpm: cpm,
+            width: width,
+            height: height,
+            dealId: 'test-deal-id-1',
+            currency: currency,
+            netRevenue: netRevenue,
+            ttl: ttl,
+            referrer: 'test-referrer',
+            ad: ad
         };
         bidResponses.push(bidResponse);
+
         return bidResponses;
     },
 
@@ -105,7 +140,5 @@ const AdvertiseXAdapter = {
 //     bidder: 'AdvertiseX',
 //     adapter: AdvertiseXAdapter
 // }, 'AdvertiseX');
-
-
 
 registerBidder(AdvertiseXAdapter);
