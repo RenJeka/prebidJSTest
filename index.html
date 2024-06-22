@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prebid Test Page</title>
+    <!-- Include Prebid.js library -->
+    <script src="/node_modules/prebid.js/build/dist/prebid.js"></script>
+</head>
+<body>
+<!-- Header -->
+<h1>Prebid Test Page</h1>
+<!-- Container for ad -->
+<div id="ad-div" style="width: 300px; height: 250px;"></div>
+<script>
+    // Set timeout for bid requests
+    const PREBID_TIMEOUT = 1000;
+
+    // Define ad units
+    const adUnits = [{
+        code: 'ad-div',
+        mediaTypes: {
+            banner: {
+                sizes: [[300, 250]]
+            }
+        },
+        bids: [{
+            bidder: 'advertisex',
+            params: {
+                adUnitCode: '123456' // Example ad unit code
+            }
+        }]
+    }];
+
+    // Queue the request to Prebid.js
+    pbjs.que.push(function() {
+        // Add ad units
+        pbjs.addAdUnits(adUnits);
+        // Request bids
+        pbjs.requestBids({
+            timeout: PREBID_TIMEOUT,
+            bidsBackHandler: initAdserver
+        });
+    });
+
+    // Function to handle bid responses
+    function initAdserver(bidResponses) {
+        // Iterate over each ad unit response
+        Object.keys(bidResponses).forEach(adUnitCode => {
+            const adUnitResponse = bidResponses[adUnitCode];
+            console.log(`Processing adUnit: ${adUnitCode}`, adUnitResponse);
+
+            if (adUnitResponse.bids && adUnitResponse.bids.length > 0) {
+                // Assume rendering the first bid
+                const bid = adUnitResponse.bids[0];
+                console.log(`Rendering ad for ${adUnitCode} with adId ${bid.adId}`);
+
+                // Find the ad unit container
+                const adDiv = document.getElementById(adUnitCode);
+                if (adDiv) {
+                    // Render the ad
+                    pbjs.renderAd(adDiv, bid.adId);
+                    // Display ad content
+                    adDiv.innerHTML = bid.ad;
+                } else {
+                    console.error(`Ad unit container not found for ${adUnitCode}`);
+                }
+            } else {
+                console.error(`No valid bids received for ${adUnitCode}`);
+            }
+        });
+    }
+</script>
+</body>
+</html>
