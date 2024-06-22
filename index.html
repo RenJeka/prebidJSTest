@@ -1,87 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Prebid Test Page</title>
-    <!-- Include Prebid.js library -->
-<!--    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/dist/not-for-prod/prebid.js"></script>-->
-<!--    <script src="//cdn.jsdelivr.net/npm/prebid.js@8.51.0/src/adapters/bidderFactory.js"></script>-->
-<!--    <script src="./advertiseXPrebidAdapter/advertiseXPrebidAdapter.js"></script>-->
-    <script src="./node_modules/prebid.js/build/dist/prebid.js"></script>
-</head>
-<body>
-<!-- Header -->
-<h1>Prebid Test Page</h1>
-<!-- Container for ad -->
-<div id="ad-div" style="width: 300px; height: 250px;"></div>
-<script>
-    // Set timeout for bid requests
-    const PREBID_TIMEOUT = 2000;
+    <head>
+        <meta charset="UTF-8">
+        <title>Prebid AdvertiseX Test</title>
+        <!-- Include Prebid.js library -->
+        <script src="./node_modules/prebid.js/build/dist/prebid.js"></script>
+    </head>
+    <body>
+        <h1>Prebid Test Page</h1>
+        <div id="ad-div" style="width: 300px; height: 250px;">
+            <iframe frameborder="0" id="ad-iframe" style="width: 300px; height: 250px;"></iframe>
+        </div>
 
-    // console.log('AdvertiseXAdapter:', AdvertiseXAdapter);
+        <script>
+            // Set timeout for bid requests
+            const PREBID_TIMEOUT = 1000;
+            const AD_WRAPPER_CONTAINER_ID = 'ad-div';
+            const AD_IFRAME_ID = 'ad-iframe';
 
+            // Define ad units
+            const adUnits = [{
+                code: AD_WRAPPER_CONTAINER_ID,
+                mediaTypes: {
+                    banner: {
+                        sizes: [[300, 250]]
+                    }
+                },
+                bids: [{
+                    bidder: 'AdvertiseX',
+                    params: {
+                        adUnitCode: '123456', // Example ad unit code,
+                        placementId: '12345'
+                    }
+                }]
+            }];
 
-    // Define ad units
-    const adUnits = [{
-        code: 'ad-div',
-        mediaTypes: {
-            banner: {
-                sizes: [[300, 250]]
-            }
-        },
-        bids: [{
-            bidder: 'AdvertiseX',
-            params: {
-                adUnitCode: '123456', // Example ad unit code,
-                placementId: '12345'
-            }
-        }]
-    }];
+            // Queue the request to Prebid.js
+            pbjs.que.push(function () {
+                // Add ad units
+                pbjs.addAdUnits(adUnits);
+                // Request bids
+                pbjs.requestBids({
+                    timeout: PREBID_TIMEOUT,
+                    bidsBackHandler: initAdServer
+                });
+            });
 
-    console.log('pbjs:', pbjs);
+            // Function to handle bid responses
+            function initAdServer(bidResponses) {
+                const bid = pbjs.getHighestCpmBids(AD_WRAPPER_CONTAINER_ID)[0];
 
+                if (bid) {
+                    const iframe = document.getElementById(AD_IFRAME_ID);
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write('<html><body></body></html>');
+                    iframeDoc.close();
 
-    // Queue the request to Prebid.js
-    pbjs.que.push(function() {
-        // Add ad units
-        pbjs.addAdUnits(adUnits);
-        // Request bids
-        pbjs.requestBids({
-            timeout: PREBID_TIMEOUT,
-            bidsBackHandler: initAdServer
-        });
-    });
-
-    // Function to handle bid responses
-    function initAdServer(bidResponses) {
-
-        console.log('bidResponses:', bidResponses);
-
-        // Iterate over each ad unit response
-        Object.keys(bidResponses).forEach(adUnitCode => {
-            const adUnitResponse = bidResponses[adUnitCode];
-            console.log(`Processing adUnit: ${adUnitCode}`, adUnitResponse);
-
-            if (adUnitResponse.bids && adUnitResponse.bids.length > 0) {
-                // Assume rendering the first bid
-                const bid = adUnitResponse.bids[0];
-                console.log(`Rendering ad for ${adUnitCode} with adId ${bid.adId}`);
-
-                // Find the ad unit container
-                const adDiv = document.getElementById(adUnitCode);
-                if (adDiv) {
-                    // Render the ad
-                    pbjs.renderAd(adDiv, bid.adId);
-                    // Display ad content
-                    adDiv.innerHTML = bid.ad;
+                    /**
+                     * use renderAd to render ad into iframe
+                     * @see https://docs.prebid.org/dev-docs/publisher-api-reference/renderAd.html
+                     */
+                    pbjs.renderAd(iframeDoc, bid.adId);
                 } else {
-                    console.error(`Ad unit container not found for ${adUnitCode}`);
+                    document.getElementById(AD_WRAPPER_CONTAINER_ID).innerHTML = '<p>No bids received</p>';
                 }
-            } else {
-                console.error(`No valid bids received for ${adUnitCode}`);
             }
-        });
-    }
-</script>
-</body>
+        </script>
+    </body>
 </html>

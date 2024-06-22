@@ -24,7 +24,6 @@ const AdvertiseXAdapter = {
      * @return ServerRequest Info describing the request to the server.
      */
     buildRequests: function(validBidRequests) {
-
         const requests = validBidRequests.map(bid => {
             return {
                 method: 'POST',
@@ -52,8 +51,7 @@ const AdvertiseXAdapter = {
     interpretResponse: function(serverResponse, bidRequest) {
 
         const bidResponses = [];
-        const response = serverResponse.body; // Extract response body
-        let requestData = bidRequest.data; // Extract request data
+        let requestData = bidRequest.data;
 
         // Parse request data if it's needed
         if (typeof requestData === 'string') {
@@ -70,6 +68,7 @@ const AdvertiseXAdapter = {
             netRevenue,
             ttl,
             ad,
+            adId,
         } = serverResponse.body
 
         const bidResponse = {
@@ -83,7 +82,8 @@ const AdvertiseXAdapter = {
             netRevenue: netRevenue,
             ttl: ttl,
             referrer: 'test-referrer',
-            ad: ad
+            ad: ad,
+            adId: adId
         };
         bidResponses.push(bidResponse);
 

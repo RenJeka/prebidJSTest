@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect=4200 server/server.js",
+    "start-mock-server": "node server/server.js",
+    "start": "http-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

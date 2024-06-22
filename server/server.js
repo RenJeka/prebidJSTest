@@ -1,25 +1,16 @@
-// import express from 'express'
-// import { v4 as uuidv4} from 'uuid'
-
 const express = require('express');
-const cors = require('cors'); // Import CORS module for handling cross-origin requests
-// const v4 = require('uuid'); // Import CORS module for handling cross-origin requests
-const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 const port = 3000;
-
 
 app.use(cors({
     origin: true,
     credentials: true
 }));
-// app.use(express.json());
-app.use(bodyParser.json());
+
+app.use(express.json());
 
 app.post('/bid', (req, res) => {
-
-    // const {width, height} = req.body;
-
     const bidRequest = {
         placementId: 12345,
         sizes: [[200, 150]]
@@ -45,7 +36,8 @@ app.post('/bid', (req, res) => {
             ttl: 300, // time to live (in sec)
             creativeId: 'sample_creative',
             netRevenue: true,
-            currency: 'USD'
+            currency: 'USD',
+            adId: 'unique-ad-id-12345'
         };
         res.json(bidResponse);
     } else {
