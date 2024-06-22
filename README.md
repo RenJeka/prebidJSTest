@@ -9,20 +9,18 @@ npm install
 ``` 
 
 ###### 2. Copy adapter files:
-Navigate to the ***Adapters*** directory and copy the
-***advertiseXPrebidAdapter.js*** and ***advertiseXPrebidAdapter.md*** 
-files to the ***/node_modules/prebid.js/modules*** directory.
+Copy adapters files to the `/node_modules/prebid.js/modules` directory.
 
 ```
-cp advertiseXPrebidAdapter/advertiseXPrebidAdapter.js advertiseXPrebidAdapter/advertiseXPrebidAdapter.md node_modules
-/prebid.js/modules
+cp advertiseXPrebidAdapter/advertiseXPrebidAdapter.js advertiseXPrebidAdapter/advertiseXPrebidAdapter.md node_modules/prebid.js/modules
 ```
+
+###### 3. Install dependencies for Prebit.js:
 
 ```
 cd node_modules/prebid.js
 ```
 
-###### 3. Install dependencies for Prebit.js:
 ```
 npm install
 ```
@@ -48,6 +46,15 @@ Open different terminal and run:
 npm run start
 ```
 
+###### 7. Open WebPage:
+Open one of link below `Available on:` in terminal
+
+**Tip**: try to open link that starts from: 
+```
+    http://172...
+    http://192...
+    http://127...
+```
 ---
 
 ##### Official documentation and useful links:
