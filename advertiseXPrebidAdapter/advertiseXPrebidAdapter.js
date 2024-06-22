@@ -1,12 +1,11 @@
-import * as utils from '../src/utils.js';
-// import {registerBidder} from '/bidderFactory.js';
 import { registerBidder } from '../src/adapters/bidderFactory.js';
 
 const ENDPOINT_URL = 'http://localhost:3000/bid'
 
 const AdvertiseXAdapter = {
     code: 'AdvertiseX',
-    supportedMediaTypes: ['Banner'],
+    supportedMediaTypes: ['banner'],
+
     /**
      * Determines whether or not the given bid request is valid.
      *
@@ -17,6 +16,7 @@ const AdvertiseXAdapter = {
         // return !!(bid.params);
         return true;
     },
+
     /**
      * Make a server request from the list of BidRequests.
      *
@@ -42,6 +42,7 @@ const AdvertiseXAdapter = {
 
         return requests;
     },
+
     /**
      * Unpack the response from the server into a list of bids.
      *
@@ -49,6 +50,16 @@ const AdvertiseXAdapter = {
      * @return {Bid[]} An array of bids which were nested inside the server.
      */
     interpretResponse: function(serverResponse, bidRequest) {
+
+        const bidResponses = [];
+        const response = serverResponse.body; // Extract response body
+        let requestData = bidRequest.data; // Extract request data
+
+        // Parse request data if it's needed
+        if (typeof requestData === 'string') {
+            requestData = JSON.parse(requestData);
+        }
+
         const {
             cpm,
             requestId,
@@ -61,9 +72,8 @@ const AdvertiseXAdapter = {
             ad,
         } = serverResponse.body
 
-        const bidResponses = [];
         const bidResponse = {
-            requestId: requestId,
+            requestId: requestData.bidId,
             creativeId: creativeId,
             cpm: cpm,
             width: width,

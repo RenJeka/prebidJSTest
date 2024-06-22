@@ -3,22 +3,22 @@
 
 const express = require('express');
 const cors = require('cors'); // Import CORS module for handling cross-origin requests
-const v4 = require('uuid'); // Import CORS module for handling cross-origin requests
+// const v4 = require('uuid'); // Import CORS module for handling cross-origin requests
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-app.use(express.json());
 
 app.use(cors({
     origin: true,
     credentials: true
 }));
+// app.use(express.json());
+app.use(bodyParser.json());
 
 app.post('/bid', (req, res) => {
 
-    console.log('/bid:', req);
-
-    const {width, height} = req.body;
+    // const {width, height} = req.body;
 
     const bidRequest = {
         placementId: 12345,
@@ -31,7 +31,6 @@ app.post('/bid', (req, res) => {
 
         // MOCK answer
         const bidResponse = {
-            requestId: '12345aaa',
             cpm: 1.50, // The bid price (cost per 1000 impressions).
             width: width,
             height: height,
