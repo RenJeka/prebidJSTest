@@ -1,9 +1,10 @@
 # prebidJSTest
 simple add that explained how prebidJS adapter works
 
-INSTALLING AND RUN 
+## INSTALLING AND RUN 
 
 ###### 1. Install:
+
 ```
 npm install
 ``` 
@@ -14,8 +15,7 @@ Navigate to the ***Adapters*** directory and copy the
 files to the ***/node_modules/prebid.js/modules*** directory.
 
 ```
-cp advertiseXPrebidAdapter/advertiseXPrebidAdapter.js advertiseXPrebidAdapter/advertiseXPrebidAdapter.md node_modules
-/prebid.js/modules
+cp advertiseXPrebidAdapter/advertiseXPrebidAdapter.js advertiseXPrebidAdapter/advertiseXPrebidAdapter.md node_modules/prebid.js/modules
 ```
 
 ```
@@ -29,7 +29,7 @@ npm install
 
 ###### 4 Build Prebid.js with your adapter:
 ```
-gulp build --modules=advertiseXPrebidAdapter
+npx gulp build --modules=advertiseXPrebidAdapter
 ```
 
 ###### 5. Start mock server:
@@ -47,8 +47,16 @@ Open different terminal and run:
 ```
 npm run start
 ```
+>TIP: if You use AdBlock — you should turn it off.
 
 ---
+
+## Test:
+
+```
+npm run test
+```
+
 
 ##### Official documentation and useful links:
 
@@ -70,5 +78,7 @@ to show debug messages from prebid:
 add `&pbjs_debug=true` (or `?pbjs_debug=true`)  to URL in browser
 
 for example: 
-`http://localhost:63342/prebidJSTest/index.html?_ijt=c9t47surk553rmdk2a1jkhoghs&pbjs_debug=true`
+```
+http://localhost:63342/prebidJSTest/index.html?_ijt=c9t47surk553rmdk2a1jkhoghs&pbjs_debug=true
+```
 
