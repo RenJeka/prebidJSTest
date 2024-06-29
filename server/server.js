@@ -45,6 +45,8 @@ app.post('/bid', (req, res) => {
     }
 });
 
-app.listen(port, () => {
+const mockServer = app.listen(port, () => {
     console.log(`PrebidJS server listening at http://localhost:${port}`);
 });
+
+module.exports = mockServer;
