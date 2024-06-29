@@ -33,8 +33,8 @@ const AdvertiseXAdapter = {
                     sizes: bid.sizes,
                     bidId: bid.bidId,
                 }),
-                headers: {
-                    'Content-Type': 'application/json'
+                options: {
+                    contentType: 'application/json'
                 }
             };
         });

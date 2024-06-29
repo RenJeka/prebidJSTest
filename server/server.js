@@ -7,16 +7,12 @@ app.use(cors({
     origin: true,
     credentials: true
 }));
-
 app.use(express.json());
 
 app.post('/bid', (req, res) => {
-    const bidRequest = {
-        placementId: 12345,
-        sizes: [[200, 150]]
-    }
+    const bidRequest = req.body
 
-    if (bidRequest.placementId && bidRequest.sizes) {
+    if (bidRequest.adUnitCode && bidRequest.sizes) {
         const width = bidRequest.sizes[0][0]
         const height = bidRequest.sizes[0][1]
 
